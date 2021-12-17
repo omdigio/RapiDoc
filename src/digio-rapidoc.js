@@ -15,15 +15,19 @@ import 'prismjs/components/prism-csharp';
 import FontStyles from '~/styles/font-styles';
 import InputStyles from '~/styles/input-styles';
 import FlexStyles from '~/styles/flex-styles';
+import TableStyles from '~/styles/table-styles';
 import EndpointStyles from '~/styles/endpoint-styles';
 import PrismStyles from '~/styles/prism-styles';
 import TabStyles from '~/styles/tab-styles';
+import NavStyles from '~/styles/nav-styles';
 import InfoStyles from '~/styles/info-styles';
 import CustomStyles from '~/styles/custom-styles';
 // import { expandCollapseNavBarTag } from '@/templates/navbar-template';
-import {advancedSearch, componentIsInSearch, pathIsInSearch, sleep} from '~/utils/common-utils';
+import {advancedSearch, componentIsInSearch, pathIsInSearch, rapidocApiKey, sleep} from '~/utils/common-utils';
 import ProcessSpec from '~/utils/spec-parser';
 import mainBodyTemplate from '~/templates/main-body-template-mini';
+import {applyApiKey, onClearAllApiKeys} from '~/templates/security-scheme-template';
+import {setApiServer} from '~/templates/server-template';
 
 export default class DigioRapiDoc extends LitElement {
     constructor() {
@@ -70,8 +74,27 @@ export default class DigioRapiDoc extends LitElement {
             schemaHideReadOnly: {type: String, attribute: 'schema-hide-read-only'},
             schemaHideWriteOnly: {type: String, attribute: 'schema-hide-write-only'},
 
+            // API Server
+            apiKeyName: {type: String, attribute: 'api-key-name'},
+            apiKeyLocation: {type: String, attribute: 'api-key-location'},
+            apiKeyValue: {type: String, attribute: 'api-key-value'},
+            defaultApiServerUrl: {type: String, attribute: 'default-api-server'},
+            serverUrl: {type: String, attribute: 'server-url'},
+            oauthReceiver: {type: String, attribute: 'oauth-receiver'},
+
             // Hide/Show Sections & Enable Disable actions
+            showHeader: {type: String, attribute: 'show-header'},
+            showSideNav: {type: String, attribute: 'show-side-nav'},
             showInfo: {type: String, attribute: 'show-info'},
+            allowAuthentication: {type: String, attribute: 'allow-authentication'},
+            allowTry: {type: String, attribute: 'allow-try'},
+            allowSpecUrlLoad: {type: String, attribute: 'allow-spec-url-load'},
+            allowSpecFileLoad: {type: String, attribute: 'allow-spec-file-load'},
+            allowSpecFileDownload: {type: String, attribute: 'allow-spec-file-download'},
+            allowSearch: {type: String, attribute: 'allow-search'},
+            allowAdvancedSearch: {type: String, attribute: 'allow-advanced-search'},
+            allowServerSelection: {type: String, attribute: 'allow-server-selection'},
+            allowSchemaDescriptionExpandToggle: {type: String, attribute: 'allow-schema-description-expand-toggle'},
             showComponents: {type: String, attribute: 'show-components'},
             pageDirection: {type: String, attribute: 'page-direction'},
 
@@ -85,6 +108,19 @@ export default class DigioRapiDoc extends LitElement {
             regularFont: {type: String, attribute: 'regular-font'},
             monoFont: {type: String, attribute: 'mono-font'},
             loadFonts: {type: String, attribute: 'load-fonts'},
+
+            // Nav Bar Colors
+            navBgColor: {type: String, attribute: 'nav-bg-color'},
+            navTextColor: {type: String, attribute: 'nav-text-color'},
+            navHoverBgColor: {type: String, attribute: 'nav-hover-bg-color'},
+            navHoverTextColor: {type: String, attribute: 'nav-hover-text-color'},
+            navAccentColor: {type: String, attribute: 'nav-accent-color'},
+            navItemSpacing: {type: String, attribute: 'nav-item-spacing'},
+            usePathInNavBar: {type: String, attribute: 'use-path-in-nav-bar'},
+            infoDescriptionHeadingsInNavBar: {type: String, attribute: 'info-description-headings-in-navbar'},
+
+            // Fetch Options
+            fetchCredentials: {type: String, attribute: 'fetch-credentials'},
 
             // Filters
             matchPaths: {type: String, attribute: 'match-paths'},
@@ -103,9 +139,11 @@ export default class DigioRapiDoc extends LitElement {
             FontStyles,
             InputStyles,
             FlexStyles,
+            TableStyles,
             EndpointStyles,
             PrismStyles,
             TabStyles,
+            NavStyles,
             InfoStyles,
             css`
               :host {
@@ -609,6 +647,58 @@ export default class DigioRapiDoc extends LitElement {
                 this.intersectionObserver.disconnect();
             }
         }
+        if (name === 'api-key-name' || name === 'api-key-location' || name === 'api-key-value') {
+            let updateSelectedApiKey = false;
+            let apiKeyName = '';
+            let apiKeyLocation = '';
+            let apiKeyValue = '';
+
+            if (name === 'api-key-name') {
+                if (this.getAttribute('api-key-location') && this.getAttribute('api-key-value')) {
+                    apiKeyName = newVal;
+                    apiKeyLocation = this.getAttribute('api-key-location');
+                    apiKeyValue = this.getAttribute('api-key-value');
+                    updateSelectedApiKey = true;
+                }
+            } else if (name === 'api-key-location') {
+                if (this.getAttribute('api-key-name') && this.getAttribute('api-key-value')) {
+                    apiKeyLocation = newVal;
+                    apiKeyName = this.getAttribute('api-key-name');
+                    apiKeyValue = this.getAttribute('api-key-value');
+                    updateSelectedApiKey = true;
+                }
+            } else if (name === 'api-key-value') {
+                if (this.getAttribute('api-key-name') && this.getAttribute('api-key-location')) {
+                    apiKeyValue = newVal;
+                    apiKeyLocation = this.getAttribute('api-key-location');
+                    apiKeyName = this.getAttribute('api-key-name');
+                    updateSelectedApiKey = true;
+                }
+            }
+
+            if (updateSelectedApiKey) {
+                if (this.resolvedSpec) {
+                    const rapiDocApiKey = this.resolvedSpec.securitySchemes.find((v) => v.securitySchemeId === rapidocApiKey);
+                    if (!rapiDocApiKey) {
+                        this.resolvedSpec.securitySchemes.push({
+                            securitySchemeId: rapidocApiKey,
+                            description: 'api-key provided in rapidoc element attributes',
+                            type: 'apiKey',
+                            name: apiKeyName,
+                            in: apiKeyLocation,
+                            value: apiKeyValue,
+                            finalKeyValue: apiKeyValue,
+                        });
+                    } else {
+                        rapiDocApiKey.name = apiKeyName;
+                        rapiDocApiKey.in = apiKeyLocation;
+                        rapiDocApiKey.value = apiKeyValue;
+                        rapiDocApiKey.finalKeyValue = apiKeyValue;
+                    }
+                    this.requestUpdate();
+                }
+            }
+        }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
 
@@ -933,6 +1023,27 @@ export default class DigioRapiDoc extends LitElement {
                 }
             }
         }
+    }
+
+    // Public Method - to update security-scheme of type http
+    setHttpUserNameAndPassword(securitySchemeId, username, password) {
+        return applyApiKey.call(this, securitySchemeId, username, password);
+    }
+
+    // Public Method - to update security-scheme of type apiKey or OAuth
+    setApiKey(securitySchemeId, apiKeyValue) {
+        return applyApiKey.call(this, securitySchemeId, '', '', apiKeyValue);
+    }
+
+    // Public Method
+    removeAllSecurityKeys() {
+        return onClearAllApiKeys.call(this);
+    }
+
+    // Public Method
+    setApiServer(apiServerUrl) {
+        // return apiServerUrl;
+        return setApiServer.call(this, apiServerUrl);
     }
 
     // Event handler for Advanced Search text-inputs and checkboxes
