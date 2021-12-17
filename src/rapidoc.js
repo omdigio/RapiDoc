@@ -1,5 +1,5 @@
-import { css, LitElement, unsafeCSS } from 'lit-element';
-import { marked } from 'marked';
+import {css, LitElement, unsafeCSS} from 'lit-element';
+import {marked} from 'marked';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-yaml';
@@ -23,11 +23,11 @@ import NavStyles from '~/styles/nav-styles';
 import InfoStyles from '~/styles/info-styles';
 import CustomStyles from '~/styles/custom-styles';
 // import { expandCollapseNavBarTag } from '@/templates/navbar-template';
-import { advancedSearch, pathIsInSearch, componentIsInSearch, rapidocApiKey, sleep } from '~/utils/common-utils';
+import {advancedSearch, componentIsInSearch, pathIsInSearch, rapidocApiKey, sleep} from '~/utils/common-utils';
 import ProcessSpec from '~/utils/spec-parser';
 import mainBodyTemplate from '~/templates/main-body-template';
-import { applyApiKey, onClearAllApiKeys } from '~/templates/security-scheme-template';
-import { setApiServer } from '~/templates/server-template';
+import {applyApiKey, onClearAllApiKeys} from '~/templates/security-scheme-template';
+import {setApiServer} from '~/templates/server-template';
 
 export default class RapiDoc extends LitElement {
   constructor() {
@@ -86,6 +86,7 @@ export default class RapiDoc extends LitElement {
       showInfo: { type: String, attribute: 'show-info' },
       allowAuthentication: { type: String, attribute: 'allow-authentication' },
       allowTry: { type: String, attribute: 'allow-try' },
+      showExpandCollapse: { type: String, attribute: 'show-expand-collapse' },
       allowSpecUrlLoad: { type: String, attribute: 'allow-spec-url-load' },
       allowSpecFileLoad: { type: String, attribute: 'allow-spec-file-load' },
       allowSpecFileDownload: { type: String, attribute: 'allow-spec-file-download' },
@@ -443,6 +444,7 @@ export default class RapiDoc extends LitElement {
     if (!this.allowAdvancedSearch || !'true, false,'.includes(`${this.allowAdvancedSearch},`)) { this.allowAdvancedSearch = 'true'; }
 
     if (!this.allowTry || !'true, false,'.includes(`${this.allowTry},`)) { this.allowTry = 'true'; }
+    if (!this.showExpandCollapse || !'true, false,'.includes(`${this.showExpandCollapse},`)) { this.showExpandCollapse = 'true'; }
     if (!this.apiKeyValue) { this.apiKeyValue = '-'; }
     if (!this.apiKeyLocation) { this.apiKeyLocation = 'header'; }
     if (!this.apiKeyName) { this.apiKeyName = ''; }

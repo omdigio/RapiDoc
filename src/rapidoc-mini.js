@@ -1,5 +1,5 @@
-import { css, LitElement } from 'lit-element';
-import { marked } from 'marked';
+import {css, LitElement} from 'lit-element';
+import {marked} from 'marked';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-yaml';
@@ -22,7 +22,7 @@ import NavStyles from '~/styles/nav-styles';
 import InfoStyles from '~/styles/info-styles';
 
 import EndpointStyles from '~/styles/endpoint-styles';
-import { rapidocApiKey } from '~/utils/common-utils';
+import {rapidocApiKey} from '~/utils/common-utils';
 import ProcessSpec from '~/utils/spec-parser';
 import mainBodyTemplate from '~/templates/main-body-template';
 
@@ -48,6 +48,7 @@ export default class RapiDocMini extends LitElement {
       defaultSchemaTab: { type: String, attribute: 'default-schema-tab' },
       responseAreaHeight: { type: String, attribute: 'response-area-height' },
       showSummaryWhenCollapsed: { type: String, attribute: 'show-summary-when-collapsed' },
+      showExpandCollapse: { type: String, attribute: 'show-expand-collapse' },
       fillRequestFieldsWithExample: { type: String, attribute: 'fill-request-fields-with-example' },
 
       // Schema Styles
@@ -169,6 +170,7 @@ export default class RapiDocMini extends LitElement {
     if (!this.responseAreaHeight) { this.responseAreaHeight = '300px'; }
 
     if (!this.allowTry || !'true, false,'.includes(`${this.allowTry},`)) { this.allowTry = 'true'; }
+    if (!this.showExpandCollapse || !'true, false,'.includes(`${this.showExpandCollapse},`)) { this.showExpandCollapse = 'true'; }
     if (!this.apiKeyValue) { this.apiKeyValue = '-'; }
     if (!this.apiKeyLocation) { this.apiKeyLocation = 'header'; }
     if (!this.apiKeyName) { this.apiKeyName = ''; }
@@ -193,7 +195,7 @@ export default class RapiDocMini extends LitElement {
   }
 
   render() {
-    return mainBodyTemplate.call(this, true, false, false, this.pathsExpanded);
+    return mainBodyTemplate.call(this, this.showExpandCollapse, false, false, this.pathsExpanded);
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
