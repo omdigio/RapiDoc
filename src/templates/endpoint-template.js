@@ -1,12 +1,12 @@
-import { html } from 'lit-element';
-import { unsafeHTML } from 'lit-html/directives/unsafe-html';
-import { marked } from 'marked';
+import {html} from 'lit-element';
+import {unsafeHTML} from 'lit-html/directives/unsafe-html';
+import {marked} from 'marked';
 import '~/components/api-request';
 import '~/components/api-response';
 import codeSamplesTemplate from '~/templates/code-samples-template';
 import callbackTemplate from '~/templates/callback-template';
-import { pathSecurityTemplate } from '~/templates/security-scheme-template';
-import { pathIsInSearch, rapidocApiKey } from '~/utils/common-utils';
+import {pathSecurityTemplate} from '~/templates/security-scheme-template';
+import {pathIsInSearch, rapidocApiKey} from '~/utils/common-utils';
 
 function toggleExpand(path) {
   if (path.expanded) {
@@ -164,7 +164,7 @@ function endpointBodyTemplate(path) {
 export default function endpointTemplate(showExpandCollapse = true, showTags = true, pathsExpanded = false) {
   if (!this.resolvedSpec) { return ''; }
   return html`
-    ${showExpandCollapse
+    ${showExpandCollapse === 'true'
       ? html`
         <div style="display:flex; justify-content:flex-end;"> 
           <span @click="${(e) => onExpandCollapseAll(e, 'expand-all')}" style="color:var(--primary-color); cursor:pointer;">

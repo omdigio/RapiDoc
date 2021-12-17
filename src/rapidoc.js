@@ -502,7 +502,7 @@ export default class RapiDoc extends LitElement {
 
   render() {
     // return render(mainBodyTemplate(this), this.shadowRoot, { eventContext: this });
-    return mainBodyTemplate.call(this, this.showExpandCollapse);
+    return mainBodyTemplate.call(this, false, this.showExpandCollapse);
   }
 
   observeExpandedContent() {

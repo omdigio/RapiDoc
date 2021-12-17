@@ -170,7 +170,7 @@ export default class RapiDocMini extends LitElement {
     if (!this.responseAreaHeight) { this.responseAreaHeight = '300px'; }
 
     if (!this.allowTry || !'true, false,'.includes(`${this.allowTry},`)) { this.allowTry = 'true'; }
-    if (!this.showExpandCollapse || !'true, false,'.includes(`${this.showExpandCollapse},`)) { this.showExpandCollapse = 'true'; }
+    if (!this.showExpandCollapse || !'true, false,'.includes(`${this.showExpandCollapse},`)) { this.showExpandCollapse = 'false'; }
     if (!this.apiKeyValue) { this.apiKeyValue = '-'; }
     if (!this.apiKeyLocation) { this.apiKeyLocation = 'header'; }
     if (!this.apiKeyName) { this.apiKeyName = ''; }
@@ -195,7 +195,7 @@ export default class RapiDocMini extends LitElement {
   }
 
   render() {
-    return mainBodyTemplate.call(this, this.showExpandCollapse, false, false, this.pathsExpanded);
+    return mainBodyTemplate.call(this, true, this.showExpandCollapse, false, this.pathsExpanded);
   }
 
   attributeChangedCallback(name, oldVal, newVal) {

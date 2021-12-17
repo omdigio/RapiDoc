@@ -1,4 +1,4 @@
-import { html } from 'lit-element';
+import {html} from 'lit-element';
 
 // Templates
 import expandedEndpointTemplate from '~/templates/expanded-endpoint-template';
@@ -11,10 +11,10 @@ import headerTemplate from '~/templates/header-template';
 import navbarTemplate from '~/templates/navbar-template';
 import advancedSearchTemplate from '~/templates/advance-search-template';
 import SetTheme from '~/utils/theme';
-import { isValidHexColor } from '~/utils/color-utils';
+import {isValidHexColor} from '~/utils/color-utils';
 
 export default function mainBodyTemplate(isMini = false, showExpandCollapse = true, showTags = true, pathsExpanded = false) {
-  if (!this.resolvedSpec) {
+    if (!this.resolvedSpec) {
     return '';
   }
   const newTheme = {
