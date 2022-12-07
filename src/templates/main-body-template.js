@@ -13,7 +13,7 @@ import advancedSearchTemplate from '~/templates/advance-search-template';
 import SetTheme from '~/utils/theme';
 import { isValidHexColor } from '~/utils/color-utils';
 
-export default function mainBodyTemplate(isMini = false, showExpandCollapse = true, showTags = true, pathsExpanded = false) {
+export default function mainBodyTemplate(isMini = false, showExpandCollapse = false, showTags = true, pathsExpanded = false) {
   if (!this.resolvedSpec) {
     return '';
   }

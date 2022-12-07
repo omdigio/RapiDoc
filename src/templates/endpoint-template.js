@@ -182,7 +182,7 @@ function endpointBodyTemplate(path) {
   </div>`;
 }
 
-export default function endpointTemplate(showExpandCollapse = true, showTags = true, pathsExpanded = false) {
+export default function endpointTemplate(showExpandCollapse = false, showTags = true, pathsExpanded = false) {
   if (!this.resolvedSpec) { return ''; }
   return html`
     ${showExpandCollapse

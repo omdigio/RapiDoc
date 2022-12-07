@@ -144,10 +144,11 @@ export default function navbarTemplate() {
         : html`<div class='nav-bar-info ${this.navActiveItemMarker}' id='link-auth' data-action='navigate' data-content-id='auth' tabindex='0' part='section-navbar-item section-navbar-auth'> Authentication </div>`
       }
 
-      <div id='link-operations-top' class='nav-bar-section operations' data-action='navigate' data-content-id='${this.renderStyle === 'focused' ? '' : 'operations-top'}' part='section-navbar-item section-navbar-operations-top'>
-        <div style='font-size:16px; display:flex; margin-left:10px;'>
-          ${this.renderStyle === 'focused'
-            ? html`
+      ${this.renderStyle !== 'read' ? html`
+          <div id='link-operations-top' class='nav-bar-section operations' data-action='navigate' data-content-id='${this.renderStyle === 'focused' ? '' : 'operations-top'}' part='section-navbar-item section-navbar-operations-top'>
+              <div style='font-size:16px; display:flex; margin-left:10px;'>
+                  ${this.renderStyle === 'focused'
+                          ? html`
               <div class='nav-bar-expand-all'
                 data-action='expand-all'
                 tabindex='0' 
@@ -158,11 +159,13 @@ export default function navbarTemplate() {
                 tabindex='0' 
                 title='Collapse all'
               >▸</div>`
-            : ''
-          }  
-        </div>
-        <div class='nav-bar-section-title'> OPERATIONS </div>
-      </div>
+                          : ''
+                  }
+              </div>
+              <div class='nav-bar-section-title'> OPERATIONS </div>
+          </div>
+      ` : ''
+      }
 
       <!-- TAGS AND PATHS-->
       ${this.resolvedSpec.tags
