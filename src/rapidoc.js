@@ -1,5 +1,5 @@
-import {css, LitElement, unsafeCSS} from 'lit';
-import {marked} from 'marked';
+import { css, LitElement, unsafeCSS } from 'lit';
+import { marked } from 'marked';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-yaml';
@@ -23,11 +23,11 @@ import NavStyles from '~/styles/nav-styles';
 import InfoStyles from '~/styles/info-styles';
 import CustomStyles from '~/styles/custom-styles';
 // import { expandCollapseNavBarTag } from '@/templates/navbar-template';
-import {advancedSearch, componentIsInSearch, pathIsInSearch, rapidocApiKey, sleep} from '~/utils/common-utils';
+import { advancedSearch, componentIsInSearch, pathIsInSearch, rapidocApiKey, sleep } from '~/utils/common-utils';
 import ProcessSpec from '~/utils/spec-parser';
 import mainBodyTemplate from '~/templates/main-body-template';
-import {applyApiKey, onClearAllApiKeys} from '~/templates/security-scheme-template';
-import {setApiServer} from '~/templates/server-template';
+import { applyApiKey, onClearAllApiKeys } from '~/templates/security-scheme-template';
+import { setApiServer } from '~/templates/server-template';
 
 export default class RapiDoc extends LitElement {
   constructor() {
