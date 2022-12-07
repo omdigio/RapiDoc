@@ -1,5 +1,5 @@
-import { html } from 'lit-element';
-import { unsafeHTML } from 'lit-html/directives/unsafe-html';
+import { html } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import Prism from 'prismjs';
 import { copyToClipboard } from '~/utils/common-utils';
 
@@ -28,6 +28,7 @@ export default function codeSamplesTemplate(xCodeSamples) {
         <pre><code class="language">${Prism.languages[v.lang?.toLowerCase()] ? unsafeHTML(Prism.highlight(v.source, Prism.languages[v.lang?.toLowerCase()], v.lang?.toLowerCase())) : v.source}</code></pre>
       </div>`)
     }
+  </div>  
   </section>`;
 }
 /* eslint-enable indent */

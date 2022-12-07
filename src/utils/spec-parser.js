@@ -9,9 +9,9 @@ export default async function ProcessSpec(specUrl, generateMissingTags = false, 
     this.requestUpdate(); // important to show the initial loader
     let specMeta;
     if (typeof specUrl === 'string') {
-      specMeta = await OpenApiParser.resolve({ url: specUrl }); // Swagger(specUrl);
+      specMeta = await OpenApiParser.resolve({ url: specUrl, allowMetaPatches: false }); // Swagger(specUrl);
     } else {
-      specMeta = await OpenApiParser.resolve({ spec: specUrl }); // Swagger({ spec: specUrl });
+      specMeta = await OpenApiParser.resolve({ spec: specUrl, allowMetaPatches: false }); // Swagger({ spec: specUrl });
     }
     await sleep(0); // important to show the initial loader (allows for rendering updates)
 
@@ -106,7 +106,7 @@ export default async function ProcessSpec(specUrl, generateMissingTags = false, 
     } else if (v.type === 'oauth2') {
       v.typeDisplay = `OAuth (${v.securitySchemeId})`;
     } else {
-      v.typeDisplay = v.type;
+      v.typeDisplay = v.type || 'None';
     }
   });
 
@@ -313,7 +313,7 @@ function groupByTags(openApiSpec, sortEndpointsBy, generateMissingTags = false, 
           // Generate a short summary which is broken
           let shortSummary = (pathOrHookObj.summary || pathOrHookObj.description || `${methodName.toUpperCase()} ${pathOrHookName}`).trim();
           if (shortSummary.length > 100) {
-            shortSummary = shortSummary.split(/[.|!|?]\s|[\r?\n]/)[0]; // take the first line (period or carriage return)
+            [shortSummary] = shortSummary.split(/[.|!|?]\s|[\r?\n]/); // take the first line (period or carriage return)
           }
           // Merge Common Parameters with This methods parameters
           let finalParameters = [];
@@ -347,6 +347,7 @@ function groupByTags(openApiSpec, sortEndpointsBy, generateMissingTags = false, 
             expandedAtLeastOnce: false,
             summary: (pathOrHookObj.summary || ''),
             description: (pathOrHookObj.description || ''),
+            externalDocs: pathOrHookObj.externalDocs,
             shortSummary,
             method: methodName,
             path: pathOrHookName,

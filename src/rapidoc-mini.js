@@ -1,5 +1,5 @@
-import {css, LitElement} from 'lit-element';
-import {marked} from 'marked';
+import { css, LitElement } from 'lit';
+import { marked } from 'marked';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-yaml';
@@ -22,9 +22,11 @@ import NavStyles from '~/styles/nav-styles';
 import InfoStyles from '~/styles/info-styles';
 
 import EndpointStyles from '~/styles/endpoint-styles';
-import {rapidocApiKey} from '~/utils/common-utils';
+import { rapidocApiKey } from '~/utils/common-utils';
 import ProcessSpec from '~/utils/spec-parser';
 import mainBodyTemplate from '~/templates/main-body-template';
+import { applyApiKey, onClearAllApiKeys } from '~/templates/security-scheme-template';
+import { setApiServer } from '~/templates/server-template';
 
 export default class RapiDocMini extends LitElement {
   constructor() {
@@ -48,8 +50,8 @@ export default class RapiDocMini extends LitElement {
       defaultSchemaTab: { type: String, attribute: 'default-schema-tab' },
       responseAreaHeight: { type: String, attribute: 'response-area-height' },
       showSummaryWhenCollapsed: { type: String, attribute: 'show-summary-when-collapsed' },
-      showExpandCollapse: { type: String, attribute: 'show-expand-collapse' },
       fillRequestFieldsWithExample: { type: String, attribute: 'fill-request-fields-with-example' },
+      persistAuth: { type: String, attribute: 'persist-auth' },
 
       // Schema Styles
       schemaStyle: { type: String, attribute: 'schema-style' },
@@ -159,7 +161,7 @@ export default class RapiDocMini extends LitElement {
       this.theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
     }
     if (!this.defaultSchemaTab || !'example, schema, model,'.includes(`${this.defaultSchemaTab},`)) {
-      this.defaultSchemaTab = 'schema';
+      this.defaultSchemaTab = 'example';
     } else if (this.defaultSchemaTab === 'model') {
       this.defaultSchemaTab = 'schema';
     }
@@ -167,10 +169,10 @@ export default class RapiDocMini extends LitElement {
     if (!this.schemaExpandLevel || this.schemaExpandLevel < 1) { this.schemaExpandLevel = 99999; }
     if (!this.schemaDescriptionExpanded || !'true, false,'.includes(`${this.schemaDescriptionExpanded},`)) { this.schemaDescriptionExpanded = 'false'; }
     if (!this.fillRequestFieldsWithExample || !'true, false,'.includes(`${this.fillRequestFieldsWithExample},`)) { this.fillRequestFieldsWithExample = 'true'; }
+    if (!this.persistAuth || !'true, false,'.includes(`${this.persistAuth},`)) { this.persistAuth = 'false'; }
     if (!this.responseAreaHeight) { this.responseAreaHeight = '300px'; }
 
     if (!this.allowTry || !'true, false,'.includes(`${this.allowTry},`)) { this.allowTry = 'true'; }
-    if (!this.showExpandCollapse || !'true, false,'.includes(`${this.showExpandCollapse},`)) { this.showExpandCollapse = 'false'; }
     if (!this.apiKeyValue) { this.apiKeyValue = '-'; }
     if (!this.apiKeyLocation) { this.apiKeyLocation = 'header'; }
     if (!this.apiKeyName) { this.apiKeyName = ''; }
@@ -195,7 +197,7 @@ export default class RapiDocMini extends LitElement {
   }
 
   render() {
-    return mainBodyTemplate.call(this, true, this.showExpandCollapse, false, this.pathsExpanded);
+    return mainBodyTemplate.call(this, true, false, false, this.pathsExpanded);
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
@@ -262,7 +264,7 @@ export default class RapiDocMini extends LitElement {
     super.attributeChangedCallback(name, oldVal, newVal);
   }
 
-  onSepcUrlChange() {
+  onSpecUrlChange() {
     this.setAttribute('spec-url', this.shadowRoot.getElementById('spec-url').value);
   }
 
@@ -301,6 +303,27 @@ export default class RapiDocMini extends LitElement {
     }
   }
 
+  // Public Method - to update security-scheme of type http
+  setHttpUserNameAndPassword(securitySchemeId, username, password) {
+    return applyApiKey.call(this, securitySchemeId, username, password);
+  }
+
+  // Public Method - to update security-scheme of type apiKey or OAuth
+  setApiKey(securitySchemeId, apiKeyValue) {
+    return applyApiKey.call(this, securitySchemeId, '', '', apiKeyValue);
+  }
+
+  // Public Method
+  removeAllSecurityKeys() {
+    return onClearAllApiKeys.call(this);
+  }
+
+  // Public Method
+  setApiServer(apiServerUrl) {
+    // return apiServerUrl;
+    return setApiServer.call(this, apiServerUrl);
+  }
+
   async afterSpecParsedAndValidated(spec) {
     this.resolvedSpec = spec;
     this.selectedServer = undefined;
@@ -316,7 +339,7 @@ export default class RapiDocMini extends LitElement {
     }
     if (!this.selectedServer) {
       if (this.resolvedSpec.servers) {
-        this.selectedServer = this.resolvedSpec.servers[0];
+        this.selectedServer = this.resolvedSpec.servers[0]; // eslint-disable-line prefer-destructuring
       }
     }
     this.requestUpdate();

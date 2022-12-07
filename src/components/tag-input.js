@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css } from 'lit';
 
 export default class TagInput extends LitElement {
   /* eslint-disable indent */
@@ -6,12 +6,12 @@ export default class TagInput extends LitElement {
     let tagItemTmpl = '';
     if (Array.isArray(this.value)) {
       tagItemTmpl = html`${this.value
-        .filter((v) => v.trim() !== '')
+        .filter((v) => typeof v === 'string' && v.trim() !== '')
         .map((v) => html`<span class='tag'>${v}</span>`)
       }`;
     }
     return html`
-      <div class='tags' tabindex="0">
+      <div class='tags'>
         ${tagItemTmpl}
         <input type="text" class='editor' @paste="${(e) => this.afterPaste(e)}" @keydown="${this.afterKeyDown}" @blur="${this.onBlur}" placeholder="${this.placeholder || ''}">
       </div>
@@ -39,12 +39,10 @@ export default class TagInput extends LitElement {
     const clipboardData = e.clipboardData || window.clipboardData;
     const pastedData = clipboardData.getData('Text');
     const pastedArray = pastedData ? pastedData.split(',').filter((v) => v.trim() !== '') : '';
-    
-    if(pastedArray) {
+    if (pastedArray) {
       if (Array.isArray(this.value)) {
         this.value = [...this.value, ...pastedArray];
-      }
-      else {
+      } else {
         this.value = pastedArray;
       }
     }
@@ -86,7 +84,7 @@ export default class TagInput extends LitElement {
 
   static get styles() {
     return [css`
-      .tags{
+      .tags {
         display:flex;
         flex-wrap: wrap;
         outline: none;
@@ -112,7 +110,7 @@ export default class TagInput extends LitElement {
       .tag:hover ~ #cursor {
         display: block;
       }
-      .editor{
+      .editor {
         flex:1;
         border:1px solid transparent;
         color:var(--fg);
@@ -122,6 +120,9 @@ export default class TagInput extends LitElement {
         font-family:inherit;
         background:transparent;
         font-size: calc(var(--font-size-small) + 1px);
+      }
+      .editor:focus-visible {
+        outline: 1px solid;
       }
       .editor::placeholder {
         color: var(--placeholder-color);

@@ -1,4 +1,4 @@
-import { css, LitElement } from 'lit-element';
+import { css, LitElement } from 'lit';
 import { marked } from 'marked';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-css';
@@ -134,7 +134,7 @@ export default class JsonSchemaViewer extends LitElement {
       .main-content::-webkit-scrollbar-thumb {
         background-color: var(--border-color);
       }
-      .header {
+      .main-header {
         background-color:var(--header-bg);
         color:var(--header-fg);
         width:100%;
@@ -229,7 +229,6 @@ export default class JsonSchemaViewer extends LitElement {
     if (!this.allowSearch || !'true, false,'.includes(`${this.allowSearch},`)) { this.allowSearch = 'true'; }
     if (!this.schemaExpandLevel || this.schemaExpandLevel < 1) { this.schemaExpandLevel = 99999; }
     if (!this.schemaDescriptionExpanded || !'true, false,'.includes(`${this.schemaDescriptionExpanded},`)) { this.schemaDescriptionExpanded = 'false'; }
-    if (!this.responseAreaHeight) { this.responseAreaHeight = '300px'; }
     if (!this.fontSize || !'default, large, largest,'.includes(`${this.fontSize},`)) { this.fontSize = 'default'; }
     if (!this.matchType || !'includes regex'.includes(this.matchType)) { this.matchType = 'includes'; }
     if (!this.allowSchemaDescriptionExpandToggle || !'true, false,'.includes(`${this.allowSchemaDescriptionExpandToggle},`)) { this.allowSchemaDescriptionExpandToggle = 'true'; }
@@ -260,7 +259,7 @@ export default class JsonSchemaViewer extends LitElement {
     super.attributeChangedCallback(name, oldVal, newVal);
   }
 
-  onSepcUrlChange() {
+  onSpecUrlChange() {
     this.setAttribute('spec-url', this.shadowRoot.getElementById('spec-url').value);
   }
 

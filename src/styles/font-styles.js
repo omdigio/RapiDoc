@@ -1,4 +1,4 @@
-import { css } from 'lit-element';
+import { css } from 'lit';
 
 export default css`
   .hover-bg:hover{
@@ -40,7 +40,7 @@ export default css`
   .blue-text {color: var(--blue)}
   .multiline {
     overflow: scroll;
-    max-height: var(--resp-area-height, 300px);
+    max-height: var(--resp-area-height, 400px);
     color: var(--fg3);  
   }
   .method-fg.put { color: var(--orange); }

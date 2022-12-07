@@ -1,6 +1,6 @@
-import { html } from 'lit-element';
+import { html } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js'; // eslint-disable-line import/extensions
 import { marked } from 'marked';
-import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 
 // Templates
 import overviewTemplate from '~/templates/overview-template';
@@ -63,7 +63,7 @@ function jsonSchemaBodyTemplate() {
                 .data = "${schemaInObjectNotation(jSchemaBody.schema, {})}"
                 schema-expand-level = "${this.schemaExpandLevel}"
                 schema-description-expanded = "${this.schemaDescriptionExpanded}"
-                allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}",
+                allow-schema-description-expand-toggle = "${this.allowSchemaDescriptionExpandToggle}"
                 schema-hide-read-only = "false"
                 schema-hide-write-only = "false"
               > </schema-tree>
@@ -113,6 +113,7 @@ export default function jsonSchemaViewerTemplate(isMini = false) {
     navHoverBgColor: isValidHexColor(this.navHoverBgColor) ? this.navHoverBgColor : '',
     navHoverTextColor: isValidHexColor(this.navHoverTextColor) ? this.navHoverTextColor : '',
     navAccentColor: isValidHexColor(this.navAccentColor) ? this.navAccentColor : '',
+    navAccenttextColor: isValidHexColor(this.navAccentTextColor) ? this.navAccentTextColor : '',
   };
   /* eslint-disable indent */
   if (this.resolvedSpec.specLoadError) {
@@ -154,7 +155,7 @@ export default function jsonSchemaViewerTemplate(isMini = false) {
     <!-- Header -->
     ${this.showHeader === 'false' ? '' : headerTemplate.call(this)}
     
-    <div id='the-main-body' class="body" dir= ${this.pageDirection}>
+    <div id='the-main-body' class="body ${this.cssClasses}" dir= ${this.pageDirection}>
 
       <!-- Side Nav -->
       ${jsonSchemaNavTemplate.call(this)}

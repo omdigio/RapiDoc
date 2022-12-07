@@ -22,7 +22,9 @@
       render-style = "read"
       sort-tags = "true"
       primary-color="#f54c47"
-    > </rapi-doc>
+    > 
+
+    </rapi-doc>
 
     <script>
       document.addEventListener('DOMContentLoaded', (event) => {
@@ -33,8 +35,21 @@
         });
 
         docEl.addEventListener('after-try', (e) => {
-          console.log(e.detail);
+          console.log('Try Complete:', e.detail);
         });
+        /*
+        docEl.addEventListener('before-try', (e) => {
+          // e.detail.controller.abort('Reason to abort');
+          setTimeout(() => {
+            e.detail.controller.abort('Reason to abort');
+          }, 100);
+        });
+
+        docEl.addEventListener('Request Aborted:', (e) => {
+          console.log('Request Aborted', e);
+        });
+        */
+
       })
     </script>
 
