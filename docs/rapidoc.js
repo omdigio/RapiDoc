@@ -1,7 +1,7 @@
 
 /**
 * @preserve
-* RapiDoc 9.3.4-3 - WebComponent to View OpenAPI docs
+* RapiDoc 9.3.4-1 - WebComponent to View OpenAPI docs
 * License: MIT
 * Repo   : https://github.com/rapi-doc/RapiDoc
 * Author : Mrinmoy Majumdar
@@ -17280,10 +17280,9 @@ function navbarTemplate() {
       ${this.allowServerSelection === 'false' ? '' : y`<div class='nav-bar-info ${this.navActiveItemMarker}' id='link-servers' data-action='navigate' data-content-id='servers' tabindex='0' part='section-navbar-item section-navbar-servers'> API Servers </div>`}
       ${this.allowAuthentication === 'false' || !this.resolvedSpec.securitySchemes ? '' : y`<div class='nav-bar-info ${this.navActiveItemMarker}' id='link-auth' data-action='navigate' data-content-id='auth' tabindex='0' part='section-navbar-item section-navbar-auth'> Authentication </div>`}
 
-      ${this.renderStyle !== 'read' ? y`
-          <div id='link-operations-top' class='nav-bar-section operations' data-action='navigate' data-content-id='${this.renderStyle === 'focused' ? '' : 'operations-top'}' part='section-navbar-item section-navbar-operations-top'>
-              <div style='font-size:16px; display:flex; margin-left:10px;'>
-                  ${this.renderStyle === 'focused' ? y`
+      <div id='link-operations-top' class='nav-bar-section operations' data-action='navigate' data-content-id='${this.renderStyle === 'focused' ? '' : 'operations-top'}' part='section-navbar-item section-navbar-operations-top'>
+        <div style='font-size:16px; display:flex; margin-left:10px;'>
+          ${this.renderStyle === 'focused' ? y`
               <div class='nav-bar-expand-all'
                 data-action='expand-all'
                 tabindex='0' 
@@ -17293,11 +17292,10 @@ function navbarTemplate() {
                 data-action='collapse-all'
                 tabindex='0' 
                 title='Collapse all'
-              >▸</div>` : ''}
-              </div>
-              <div class='nav-bar-section-title'> OPERATIONS </div>
-          </div>
-      ` : ''}
+              >▸</div>` : ''}  
+        </div>
+        <div class='nav-bar-section-title'> OPERATIONS </div>
+      </div>
 
       <!-- TAGS AND PATHS-->
       ${this.resolvedSpec.tags.filter(tag => tag.paths.filter(path => pathIsInSearch(this.matchPaths, path, this.matchType)).length).map(tag => {
@@ -17647,7 +17645,7 @@ function endpointBodyTemplate(path) {
       </div>
   </div>`;
 }
-function endpointTemplate(showExpandCollapse = false, showTags = true, pathsExpanded = false) {
+function endpointTemplate(showExpandCollapse = true, showTags = true, pathsExpanded = false) {
   if (!this.resolvedSpec) {
     return '';
   }
@@ -18345,7 +18343,7 @@ function setTheme(baseTheme, theme = {}) {
 
 
 
-function mainBodyTemplate(isMini = false, showExpandCollapse = false, showTags = true, pathsExpanded = false) {
+function mainBodyTemplate(isMini = false, showExpandCollapse = true, showTags = true, pathsExpanded = false) {
   if (!this.resolvedSpec) {
     return '';
   }
@@ -19137,8 +19135,6 @@ class RapiDoc extends lit_element_s {
     }
     if (!this.showExpandCollapse || !'true, false,'.includes(`${this.showExpandCollapse},`)) {
       this.showExpandCollapse = 'true';
-    } else {
-      this.showExpandCollapse = false;
     }
     if (!this.apiKeyValue) {
       this.apiKeyValue = '-';
@@ -26646,7 +26642,7 @@ function getType(str) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("30c8768211ae0bb078e9")
+/******/ 		__webpack_require__.h = () => ("381d46f40d2746ec36d4")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
@@ -26669,7 +26665,7 @@ function getType(str) {
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
 /******/ 		var inProgress = {};
-/******/ 		var dataWebpackPrefix = "digio-rapidoc:";
+/******/ 		var dataWebpackPrefix = "rapidoc:";
 /******/ 		// loadScript function to load a script via script tag
 /******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
@@ -27153,7 +27149,7 @@ function getType(str) {
 /******/ 			});
 /******/ 		}
 /******/ 		
-/******/ 		self["webpackHotUpdatedigio_rapidoc"] = (chunkId, moreModules, runtime) => {
+/******/ 		self["webpackHotUpdaterapidoc"] = (chunkId, moreModules, runtime) => {
 /******/ 			for(var moduleId in moreModules) {
 /******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
 /******/ 					currentUpdate[moduleId] = moreModules[moduleId];
